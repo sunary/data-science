@@ -7,6 +7,10 @@ from random import randint
 
 class LogisticRegression():
 
+    '''
+    logistis regression and polynomial
+    '''
+
     POWER = 3
 
     def __init__(self):

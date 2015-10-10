@@ -25,6 +25,7 @@ class Vertex():
     def disp_norm(self):
         return self.disp[0]**2 + self.disp[1]**2
 
+
 class Graph():
 
     def __init__(self, vertex):
@@ -35,7 +36,8 @@ class Graph():
         self.num_edge = len(edge)
         self.edge = edge
 
-#algorithm by Fruchterman and Reingold
+
+#Fruchterman and Reingold algorithm
 class ForceDirected():
     WIDTH = 400
     HEIGHT = 400

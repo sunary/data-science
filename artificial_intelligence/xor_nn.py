@@ -62,6 +62,7 @@ class XorNeuralNetwork():
             self.layer_last.propagation(self.layer_3rd)
             print 0 if (self.layer_last.output[0] > self.layer_last.output[1]) else 1
 
+
 if __name__ == '__main__':
     xor = XorNeuralNetwork()
     xor.train()

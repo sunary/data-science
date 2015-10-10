@@ -31,7 +31,12 @@ class Ant():
 
         return path
 
-class ACO():
+
+class ACOAlgorithm():
+
+    '''
+    Ant colony optimization algorithms to find shortest path
+    '''
 
     def __init__(self):
         self.evaporation_rate = 0.8
@@ -154,8 +159,9 @@ class ACO():
                 return True
         return False
 
+
 if __name__ == '__main__':
-    aco = ACO()
+    aco = ACOAlgorithm()
     graph = [[-1, 5, 7, 9, 2],
              [5, -1, 12, 8, 6],
              [7, 12, -1, 13, 21],
