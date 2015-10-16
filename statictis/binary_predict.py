@@ -37,8 +37,7 @@ class BinaryPredict():
             self.add_bin()
 
     def add_bin(self, bin=None):
-        if bin is None:
-            bin = str(random.randint(0, 1))
+        bin = bin or str(random.randint(0, 1))
 
         self.keep_binary += bin
         if self.way_one:
@@ -98,7 +97,7 @@ class BinaryPredict():
 
     def get_binary(self, len):
         '''
-        Cartesian product binary has lengh len
+        Cartesian product binary has length len
         Examples:
             >>> get_binary(2):
             ['00', '01', '10', '11']

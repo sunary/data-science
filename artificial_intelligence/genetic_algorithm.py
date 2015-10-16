@@ -45,11 +45,11 @@ class GeneticAlgorithm():
             fitness[i] = 1.0/fitness[i]
 
         sum_fitness = sum(fitness)
-        self.probality = [0]*len(self.chromosome)
+        self.probability = [0]*len(self.chromosome)
 
-        self.probality[0] = fitness[0]/sum_fitness
+        self.probability[0] = fitness[0]/sum_fitness
         for i in range(1, len(fitness)):
-            self.probality[i] = self.probality[i - 1] + fitness[i]/sum_fitness
+            self.probability[i] = self.probability[i - 1] + fitness[i]/sum_fitness
 
         return False
 
@@ -59,16 +59,16 @@ class GeneticAlgorithm():
         '''
         object_selected = []
         for _ in range(self.len_selection):
-            id = self.id_selection(random.random(), self.probality)
+            id = self.id_selection(random.random(), self.probability)
             object_selected.append(self.chromosome[id])
 
         self.chromosome = object_selected
 
-    def id_selection(self, p, list_probality):
-        for i in range(len(list_probality)):
-            if p <= list_probality[i]:
+    def id_selection(self, p, list_probability):
+        for i in range(len(list_probability)):
+            if p <= list_probability[i]:
                 return i
-        return len(list_probality) - 1
+        return len(list_probability) - 1
 
     def crossover(self):
         '''

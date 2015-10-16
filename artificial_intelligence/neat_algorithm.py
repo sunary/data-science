@@ -20,6 +20,7 @@ class Car():
         self.width = width
         self.height = height
 
+        self.v = self.width/20
         self.restart()
 
     def restart(self):
