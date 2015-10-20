@@ -9,12 +9,11 @@ class LayerNetwork():
     '''
     layer of neural network
     '''
-
     shim = 1.0
-    num_nut = 0
     teaching_speed = 0.05
 
-    def __init__(self, num_nut_layer):
+    def __init__(self, num_nut_layer, use_sigmod=True):
+        self.use_sigmod = use_sigmod
         self.num_nut = num_nut_layer
 
         self.bias = [0.1]* self.num_nut
@@ -32,12 +31,12 @@ class LayerNetwork():
     def set_weight(self, input_weight):
         self.weight = [temp[:] for temp in input_weight]
 
-    def random_weight(self, length_random, num_nut_previous_layer):
+    def random_weight(self, range_random, num_nut_previous_layer):
         random_weight = [[] for _ in range(self.num_nut)]
         for i in range(self.num_nut):
             random_weight[i] = [0]* num_nut_previous_layer
             for j in range(num_nut_previous_layer):
-                random_weight[i][j] = 2*length_random*random.random() - length_random
+                random_weight[i][j] = 2*range_random*random.random() - range_random
 
         self.set_weight(random_weight)
 
@@ -46,7 +45,7 @@ class LayerNetwork():
             temp = 0
             for j in range(previous_layer.num_nut):
                 temp += self.weight[i][j]*previous_layer.output[j]
-            self.output[i] = self._sigmoid(temp + self.bias[i])
+            self.output[i] = self.f_active(temp + self.bias[i])
 
     def back_propagation(self, previous_layer, next_layer):
         self.delta = [0]*self.num_nut
@@ -57,7 +56,7 @@ class LayerNetwork():
             for j in range(next_layer.num_nut):
                 self.delta[i] += next_layer.weight[j][i]*next_layer.delta[j]
 
-            self.delta[i] *= self._derivation_sigmoid(temp + self.bias[i])
+            self.delta[i] *= self.f_derivation(temp + self.bias[i])
 
     def train(self, previous_layer):
         for i in range(self.num_nut):
@@ -78,22 +77,18 @@ class LayerNetwork():
                 id_node = i
         return id_node
 
-    def _tanh(self, x):
-        '''
-        Range [-1:1]
-        '''
-        return 1.0 - 2 / (math.exp(2*x * self.shim) + 1)
+    def f_active(self, x):
+        if self.use_sigmod:
+            # range [0, 1]
+            return 1.0 / (math.exp(-x * self.shim) + 1.0)
+        else:
+            # range [-1, 1]
+            return 1.0 - 2 / (math.exp(2*x * self.shim) + 1)
 
-    def _derivation_tanh(self, x):
-        f_activation = self._tanh(x)
-        return self.shim * (1.0 - f_activation **2)
-
-    def _sigmoid(self, x):
-        '''
-        Range [0:1]
-        '''
-        return 1.0 / (math.exp(-x * self.shim) + 1.0)
-
-    def _derivation_sigmoid(self, x):
-        f_activation = self._sigmoid(x)
-        return self.shim * f_activation*(1.0 - f_activation)
+    def f_derivation(self, x):
+        if self.use_sigmod:
+            f_activation = self.f_active(x)
+            return self.shim * f_activation*(1.0 - f_activation)
+        else:
+            f_activation = self.f_active(x)
+            return self.shim * (1.0 - f_activation **2)

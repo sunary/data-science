@@ -12,10 +12,10 @@ class GeneticAlgorithm():
     '''
 
     def __init__(self):
-        self.len_selection = 10
         self.size = 4
 
     def start(self):
+        self.len_selection = 10
         self.chromosome = [[random.randint(0, 100) for _ in range(self.size)] for _ in range(self.len_selection)]
 
     def process(self):
@@ -88,9 +88,10 @@ class GeneticAlgorithm():
         for _ in range(random.randint(0, len(self.chromosome))):
             chromosome_mutation = self.chromosome[random.randint(0, len(self.chromosome) - 1)]
             position_mutation = random.randint(0, self.size - 1)
-            value_mutation = random.randint(0, 4) - 2 + chromosome_mutation[position_mutation]
+            value_mutation = (random.randint(0, 4) - 2) + chromosome_mutation[position_mutation]
             value_mutation = 0 if value_mutation <= 0 else value_mutation
             chromosome_mutation[position_mutation] = value_mutation
+
             object_mutation.append(chromosome_mutation)
 
         self.chromosome += object_mutation

@@ -1,94 +1,125 @@
 __author__ = 'sunary'
 
 
-import Tkinter
-import time
+from artificial_intelligence.race_game import RaceGame
+from artificial_intelligence.neural_network import NeuralNetwork
+import random
 
 
-class Wall():
-
-    def __init__(self, rect):
-        self.rect = rect
-
-    def draw(self, canvas):
-        canvas.create_rectangle(*self.rect, fill='black')
-
-class Car():
-
-    def __init__(self, start, width, height):
-        self.start = start
-        self.width = width
-        self.height = height
-
-        self.v = self.width/20
-        self.restart()
-
-    def restart(self):
-        self.mid = self.start
-        self.angle = 0
-        self.a1 = (self.mid[0] - self.width/2, self.mid[1] - self.height/2)
-        self.a2 = (self.mid[0] + self.width/2, self.mid[1] - self.height/2)
-        self.a3 = (self.mid[0] + self.width/2, self.mid[1] + self.height/2)
-        self.a4 = (self.mid[0] - self.width/2, self.mid[1] + self.height/2)
-
-    def draw(self, canvas):
-        canvas.create_polygon(self.a1[0], self.a1[1], self.a2[0], self.a2[1], self.a3[0], self.a3[1], self.a4[0], self.a4[1], fill='blue')
-
-    def update(self):
-        pass
-
-
-class RaceGame():
-    root = Tkinter.Tk(className='Race game')
+class NEAT(RaceGame):
 
     def __init__(self):
-        self.car = Car((225, 275), 45, 25)
-        wall_position = [(0, 0, 450, 50),
-                         (0, 300, 450, 350),
-                         (0, 50, 50, 300),
-                         (400, 50, 450, 300),
-                         (100, 100, 150, 200),
-                         (300, 100, 350, 200),
-                         (200, 50, 250, 150),
-                         (100, 200, 350, 250)]
-        self.walls = [Wall(rect) for rect in wall_position]
+        self.delta_angle = [-0.03, -0.02, -0.01, 0, 0.01, 0.02, 0.03]
+        self.nn_nodes = [5, 8, 5, 7]
+        self.start()
 
-        canvas = Tkinter.Canvas(self.root, width=450, height=350)
-        canvas.pack()
-        self.root.canvas = canvas.canvas = canvas
+        RaceGame.__init__(self)
 
-        while True:
-            self.draw(canvas)
-            self.root.mainloop()
-            self.control()
-            self.update()
-            time.sleep(0.04)
+    def start(self):
+        self.gen = 1
+        self.size = 0
+        for i in range(1, len(self.nn_nodes)):
+            self.size += self.nn_nodes[i - 1]*self.nn_nodes[i]
 
-    def draw(self, canvas):
-        canvas.delete(Tkinter.ALL)
+        self.len_selection = 20
+        range_random = 2.0
+        self.chromosome_weight = [[(2*range_random * random.random() - range_random) for _ in range(self.size)]
+                                  for _ in range(self.len_selection)]
 
-        for wall in self.walls:
-            wall.draw(canvas)
+        self.step_record = [0] * self.len_selection
+        self.model_id = 0
+        self.model = self.get_model(self.chromosome_weight[self.model_id])
 
-        self.car.draw(canvas)
+    def get_model(self, weight):
+        model = NeuralNetwork(self.nn_nodes)
 
+        nn_weight = []
+        for i in range(1, len(self.nn_nodes)):
+            layer_weight = []
+            for _ in range(self.nn_nodes[i]):
+                layer_weight.append(weight[:self.nn_nodes[i - 1]])
+                weight = weight[self.nn_nodes[i - 1]:]
 
-    def control(self):
-        pass
+            nn_weight.append(layer_weight)
+        model.set_weight(nn_weight)
+
+        return model
 
     def update(self):
-        pass
+        RaceGame.update(self)
 
+        self.step_record[self.model_id] += 1
+        if self.is_broken:
+            self.model_id += 1
+            if self.model_id == len(self.chromosome_weight):
+                self.evaluation()
+                self.selection()
+                self.crossover()
+                self.mutation()
 
-class NEAT():
+                self.step_record = [0] * len(self.chromosome_weight)
+                self.model_id = 0
 
-    def __init__(self):
-        self.race_game = RaceGame()
+            self.model = self.get_model(self.chromosome_weight[self.model_id])
+            self.car.restart()
+        else:
+            self.car.update(delta_angle=self.get_angle(self.collision_sight + [self.car.angle]))
 
-    def process(self):
-        pass
+    def get_angle(self, input):
+        id = self.model.train(input)
+        return self.delta_angle[id]
+
+    def evaluation(self):
+        print 'Gen: %s, max: %s steps' % (self.gen, max(self.step_record))
+        self.gen += 1
+
+        fitness = [0] * len(self.chromosome_weight)
+        sum_steps = sum(self.step_record)
+        for i in range(len(self.chromosome_weight)):
+            fitness[i] = float(self.step_record[i])/sum_steps
+
+        self.probability = [0]*len(self.chromosome_weight)
+
+        self.probability[0] = fitness[0]
+        for i in range(1, len(fitness)):
+            self.probability[i] = self.probability[i - 1] + fitness[i]
+
+    def selection(self):
+        object_selected = []
+        for _ in range(self.len_selection):
+            id = self.id_selection(random.random(), self.probability)
+            object_selected.append(self.chromosome_weight[id])
+
+        self.chromosome_weight = object_selected
+
+    def id_selection(self, p, list_probability):
+        for i in range(len(list_probability)):
+            if p <= list_probability[i]:
+                return i
+        return len(list_probability) - 1
+
+    def crossover(self):
+        object_crossover = []
+        for i in range(len(self.chromosome_weight)):
+            for j in range(len(self.chromosome_weight)):
+                if i != j:
+                    len_crossover = random.randint(1, self.size - 1)
+                    object_crossover.append(self.chromosome_weight[i][:len_crossover] + self.chromosome_weight[j][len_crossover:])
+
+        self.chromosome_weight += object_crossover
+
+    def mutation(self):
+        object_mutation = []
+        for _ in range(len(self.chromosome_weight)/5):
+            chromosome_mutation = self.chromosome_weight[random.randint(0, len(self.chromosome_weight) - 1)]
+            position_mutation = random.randint(0, self.size - 1)
+            value_mutation = random.random()/5 + chromosome_mutation[position_mutation]
+            chromosome_mutation[position_mutation] = value_mutation
+
+            object_mutation.append(chromosome_mutation)
+
+        self.chromosome_weight += object_mutation
 
 
 if __name__ == '__main__':
-    neat = NEAT()
-    neat.process()
+    race_game = NEAT()
