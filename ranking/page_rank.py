@@ -41,5 +41,5 @@ class PageRank():
 
 if __name__ == '__main__':
     pagerank = PageRank()
-    pagerank.input(8, [[0,1], [0,3], [1,2], [1,3], [1,4], [2,4], [2,5], [3,7], [4,5], [4,6], [5,7]])
+    pagerank.input(8, [[0, 1], [0, 3], [1, 2], [1, 3], [1, 4], [2, 4], [2, 5], [3, 7], [4, 5], [4, 6], [5, 7]])
     print pagerank.process()
