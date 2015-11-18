@@ -1,6 +1,8 @@
 __author__ = 'sunary'
 
+
 import os
+
 
 class Kmean():
 
@@ -59,6 +61,7 @@ class Kmean():
 
         return different_group
 
+
 if __name__ == '__main__':
     current_dir = os.path.dirname(__file__)
 
@@ -70,7 +73,6 @@ if __name__ == '__main__':
         for j in range(len(data_skin[i]) - 1):
             data_skin[i][j] = int(data_skin[i][j])/255.0
         data_skin[i][3] = 0 if (data_skin[i][3] == '2') else 1
-
 
     kmean = Kmean()
     kmean.input(data_skin, 5)

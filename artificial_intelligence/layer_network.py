@@ -19,7 +19,7 @@ class LayerNetwork():
         self.bias = [0.1]* self.num_nut
         self.output = [0]* self.num_nut
         self.delta = [0]* self.num_nut
-        self.weight = [[]]* self.num_nut
+        self.weight = [[] for _ in range(self.num_nut)]
 
     # only first layer need output
     def set_output_layer_first(self, input_model):
@@ -69,11 +69,11 @@ class LayerNetwork():
             self.delta[i] = output_expected[i] - self.output[i]
 
     def node_expected(self):
-        max = 0
+        max_value = 0
         id_node = 0
         for i in range(len(self.output)):
-            if self.output[i] > max:
-                max = self.output[i]
+            if self.output[i] > max_value:
+                max_value = self.output[i]
                 id_node = i
         return id_node
 
