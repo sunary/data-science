@@ -110,6 +110,7 @@ class Player():
         self.cards = [Card(v) for v in value_cards]
         self.sort()
         self.check_group()
+        self.distinct_card()
 
     def sort(self):
         for i in range(len(self.cards) - 1):
@@ -158,6 +159,23 @@ class Player():
                 elif len(same_rank_cards) >= 3:
                     self.group_same_rank.append(Group(same_rank_cards, False))
 
+    def distinct_card(self):
+        for gr_straight in self.group_straight:
+            for gr_same_rank in self.group_same_rank:
+                i = j = 0
+                while i < len(gr_straight.cards):
+                    while j < len(gr_same_rank.cards):
+                        if int(gr_straight.cards[i]) == int(gr_same_rank.cards[j]):
+                            if len(gr_straight.cards) > len(gr_same_rank.cards):
+                                self.group_same_rank.remove(gr_same_rank)
+                            else:
+                                self.group_straight.remove(gr_straight)
+                            i = len(gr_straight.cards)
+                            j = len(gr_same_rank.cards)
+
+                        j += 1
+                    i += 1
+
     def mine_cards(self):
         mine_cards = [False for _ in range(52)]
         for c in self.cards:
@@ -170,7 +188,31 @@ class Player():
         mine_cards = self.mine_cards()
         subtract_cards = [((not mine_cards[i]) and remain_cards[i]) for i in range(len(remain_cards))]
 
-        return sum([c.get_score(subtract_cards) for c in cards])/len(self.cards)
+        score = 0
+        num_group = 0
+        for c in cards:
+            exist_in_group = False
+            for gr in self.group_straight:
+                if c in gr.cards:
+                    exist_in_group = True
+            for gr in self.group_same_rank:
+                if c in gr.cards:
+                    exist_in_group = True
+
+            if not exist_in_group:
+                num_group += 1
+                score += c.get_score(subtract_cards)
+
+        players_cards = [13, 13, 13]
+        for gr in self.group_straight:
+            num_group += 1
+            score += gr.get_score(subtract_cards)/(gr.get_probability(players_cards) **0.5)
+
+        for gr in self.group_same_rank:
+            num_group += 1
+            score += gr.get_score(subtract_cards)/(gr.get_probability(players_cards) **0.5)
+
+        return num_group, score/num_group
 
     def holder(self, remain_cards):
         pass
@@ -183,10 +225,10 @@ class Player():
         for c in self.cards:
             text += str(c) + ' '
 
-        for g in self.group_straight:
-            text += str(g) + ' '
-        for g in self.group_same_rank:
-            text += str(g) + ' '
+        for gr in self.group_straight:
+            text += str(gr) + ' '
+        for gr in self.group_same_rank:
+            text += str(gr) + ' '
 
         return text
 

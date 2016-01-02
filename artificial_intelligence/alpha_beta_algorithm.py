@@ -79,7 +79,7 @@ class Tictactoe():
         elif status_temp_board == 2:
             return 5
         elif status_temp_board == 1:
-            return -6
+            return -8
 
         if human_turn:
             max_score = -100

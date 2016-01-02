@@ -3,6 +3,7 @@ __author__ = 'sunary'
 
 from artificial_intelligence.race_game import RaceGame
 from artificial_intelligence.neural_network import NeuralNetwork
+from ranking.scale import Scale
 import random
 
 
@@ -71,12 +72,19 @@ class NEAT(RaceGame):
 
     def evaluation(self):
         print 'Gen: %s, max: %s steps' % (self.gen, max(self.step_record))
+
+        rank_step_record = Scale.standard_competition_ranking(self.step_record)
+        max_rank = max(rank_step_record)
+        for i in range(len(rank_step_record)):
+            if rank_step_record[i] == max_rank:
+                rank_step_record[i] *= 2
+
         self.gen += 1
 
         fitness = [0] * len(self.chromosome_weight)
-        sum_steps = sum(self.step_record)
+        sum_steps = sum(rank_step_record)
         for i in range(len(self.chromosome_weight)):
-            fitness[i] = float(self.step_record[i])/sum_steps
+            fitness[i] = float(rank_step_record[i])/sum_steps
 
         self.probability = [0]*len(self.chromosome_weight)
 
