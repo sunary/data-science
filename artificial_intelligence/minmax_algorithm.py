@@ -13,7 +13,7 @@ class Tictactoe():
 
     def __init__(self):
         self.human_turn = True
-        self.user_board = [0]*9
+        self.user_board = [0] * 9
         self.line = [[0, 1, 2],
                      [3, 4, 5],
                      [6, 7, 8],
@@ -23,20 +23,26 @@ class Tictactoe():
                      [0, 4, 8],
                      [2, 4, 6]]
 
+    def human_random_move(self):
+        random_move = random.randint(0, len(self.user_board) - 1)
+        while True:
+            if self.user_board[random_move] == 0:
+                return random_move
+            elif random_move == 0:
+                random_move = len(self.user_board) - 1
+            else:
+                random_move -= 1
+
     def start(self):
         who_win = 0
         text = ['tie', 'human win', 'machine win']
         while True:
             if self.human_turn:
-                random_move = random.randint(0, len(self.user_board) - 1)
-                while True:
-                    if self.user_board[random_move] == 0:
-                        self.user_board[random_move] = 1
-                        break
-                    random_move -= 1
+                human_move = self.human_random_move()
+                self.user_board[human_move] = 1
                 self.human_turn = False
             else:
-                max_score = -100
+                max_score = -999999
                 select_id_max_score = 0
                 for i in range(len(self.user_board)):
                     if self.user_board[i] == 0:
@@ -79,21 +85,25 @@ class Tictactoe():
         elif status_temp_board == 2:
             return 5
         elif status_temp_board == 1:
-            return -8
+            return -5
 
         if human_turn:
-            max_score = -100
+            max_score = -999999
             for i in range(len(user_board)):
                 if user_board[i] == 0:
+                    user_board[i] = 2
                     next_move_score = self.next_move(False, user_board, i)
                     max_score = next_move_score if next_move_score > max_score else max_score
+                    user_board[i] = 0
             return max_score
         else:
-            min_score = 100
+            min_score = 999999
             for i in range(len(user_board)):
                 if user_board[i] == 0:
+                    user_board[i] = 1
                     next_move_score = self.next_move(True, user_board, i)
                     min_score = next_move_score if next_move_score < min_score else min_score
+                    user_board[i] = 0
             return min_score
 
     def print_board(self):
@@ -101,6 +111,7 @@ class Tictactoe():
         print '%s %s %s' % (self.user_board[3], self.user_board[4], self.user_board[5])
         print '%s %s %s' % (self.user_board[6], self.user_board[7], self.user_board[8])
         print '+---+'
+
 
 if __name__ == '__main__':
     tictactoe = Tictactoe()
