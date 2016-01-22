@@ -13,7 +13,7 @@ build = 0
 if os.path.exists(__path('build.info')):
     build = open(__path('build.info')).read().strip()
 
-version = '1.0.{}'.format(build)
+version = '1.0.{0}'.format(build)
 
 install_reqs = parse_requirements('requirements.txt')
 reqs = [str(ir.req) for ir in install_reqs]
