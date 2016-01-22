@@ -15,7 +15,7 @@ if os.path.exists(__path('build.info')):
 
 version = '1.0.{0}'.format(build)
 
-install_reqs = parse_requirements('requirements.txt')
+install_reqs = parse_requirements('requirements.txt', session=False)
 reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
