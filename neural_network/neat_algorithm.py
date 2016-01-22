@@ -1,10 +1,11 @@
 __author__ = 'sunary'
 
-
-from artificial_intelligence.race_game import RaceGame
-from artificial_intelligence.neural_network import NeuralNetwork
-from ranking.scale import Scale
 import random
+
+from artificial_intelligence.neural_network import NeuralNetwork
+
+from neural_network.race_game import RaceGame
+from ranking.scale import Scale
 
 
 class NEAT(RaceGame):

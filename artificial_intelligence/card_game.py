@@ -101,7 +101,7 @@ class Group():
         for c in self.cards:
             text += str(c) + ' '
 
-        return  '[' + text[ :-1] + ']'
+        return '[' + text[ :-1] + ']'
 
 
 class Player():
