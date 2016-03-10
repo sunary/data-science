@@ -70,7 +70,7 @@ class ForceDirected():
                         self.graph.vertex[v1].disp[0] += temp_vertex.pos[0] * self._fr(norm) / norm
                         self.graph.vertex[v1].disp[1] += temp_vertex.pos[1] * self._fr(norm) / norm
 
-			# calculate attractive forces
+            # calculate attractive forces
             for v in range(self.graph.num_vertex):
                 self.graph.vertex[v].visited = False
 

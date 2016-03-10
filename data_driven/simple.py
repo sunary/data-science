@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def sin_cos():
+def warmup():
     x = np.arange(0, 3 * np.pi, 0.1)
     y_sin = np.sin(x)
     y_cos = np.cos(x)
@@ -22,7 +22,7 @@ def sin_cos():
     plt.show()
 
 
-def mutil():
+def subplot():
     x = np.arange(0, 3 * np.pi, 0.1)
     y_sin = np.sin(x)
     y_cos = np.cos(x)
@@ -39,5 +39,5 @@ def mutil():
 
 
 if __name__ == '__main__':
-    sin_cos()
-    mutil()
+    warmup()
+    subplot()
