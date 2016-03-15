@@ -2,7 +2,7 @@ __author__ = 'sunary'
 
 
 import random
-from neural_network.neural_network import NeuralNetwork
+from neural_network.model_nn import NeuralNetwork
 from neural_network.race_game import RaceGame
 from ranking.scale import Scale
 

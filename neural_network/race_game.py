@@ -154,11 +154,13 @@ class RaceGame():
 
     def update(self):
         self.is_broken = False
-        for point in self.car.vertexs:
+
+        for i, point in enumerate(self.car.vertexs):
             for wall in self.walls:
                 if wall.check_in(point):
+                    self.car_collision_id = i
                     self.is_broken = True
-                    break
+                    return
 
         self.collision_sight = [1]*len(self.car.sights)
         if not self.is_broken:

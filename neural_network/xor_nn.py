@@ -1,7 +1,7 @@
 __author__ = 'sunary'
 
 
-from layer_network import LayerNetwork
+from neural_network.layer_nn import LayerNetwork
 
 
 class XorNeuralNetwork():
