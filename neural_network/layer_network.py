@@ -10,15 +10,15 @@ class LayerNetwork():
     layer of neural network
     '''
     shim = 1.0
-    teaching_speed = 0.05
+    teaching_speed = 0.1
 
-    def __init__(self, num_nut_layer, use_sigmod=True):
-        self.use_sigmod = use_sigmod
+    def __init__(self, num_nut_layer, using_sigmod=True):
+        self.using_sigmod = using_sigmod
         self.num_nut = num_nut_layer
 
-        self.bias = [0.1]* self.num_nut
-        self.output = [0]* self.num_nut
-        self.delta = [0]* self.num_nut
+        self.bias = [1.0] * self.num_nut
+        self.output = [0] * self.num_nut
+        self.delta = [0] * self.num_nut
         self.weight = [[] for _ in range(self.num_nut)]
 
     # only first layer need output
@@ -78,7 +78,7 @@ class LayerNetwork():
         return id_node
 
     def f_active(self, x):
-        if self.use_sigmod:
+        if self.using_sigmod:
             # range [0, 1]
             return 1.0 / (math.exp(-x * self.shim) + 1.0)
         else:
@@ -86,7 +86,7 @@ class LayerNetwork():
             return 1.0 - 2 / (math.exp(2*x * self.shim) + 1)
 
     def f_derivation(self, x):
-        if self.use_sigmod:
+        if self.using_sigmod:
             f_activation = self.f_active(x)
             return self.shim * f_activation*(1.0 - f_activation)
         else:

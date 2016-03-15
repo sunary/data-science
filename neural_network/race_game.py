@@ -50,6 +50,7 @@ class Wall():
 
         return point
 
+
 class Car():
 
     def __init__(self, start, width, height):

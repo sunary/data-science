@@ -6,9 +6,9 @@ from layer_network import LayerNetwork
 
 class NeuralNetwork():
 
-    def __init__(self, layer_nodes, use_sigmod=True):
-        self.use_sigmod = use_sigmod
-        self.layer = [LayerNetwork(i, self.use_sigmod) for i in layer_nodes]
+    def __init__(self, layer_nodes, using_sigmod=True):
+        self.using_sigmod = using_sigmod
+        self.layer = [LayerNetwork(i, self.using_sigmod) for i in layer_nodes]
         self.random_weight()
 
     def random_weight(self, range_random=2.0):
@@ -27,14 +27,14 @@ class NeuralNetwork():
 
         output = self.layer[len(self.layer) - 1].output
         select_id = 0
-        max_output = -1
-        for i in range(len(output)):
+        max_output = output[0]
+        for i in range(1, len(output)):
             if max_output < output[i]:
                 max_output = output[i]
                 select_id = i
 
-        if expected_id:
-            if self.use_sigmod:
+        if expected_id is not None:
+            if self.using_sigmod:
                 expected_output = [0] * self.layer[len(self.layer) - 1].num_nut
             else:
                 expected_output = [-1] * self.layer[len(self.layer) - 1].num_nut
@@ -45,7 +45,7 @@ class NeuralNetwork():
             for i in range(len(self.layer) - 2, 0, -1):
                 self.layer[i].back_propagation(self.layer[i - 1], self.layer[i + 1])
 
-            #train
+            # train
             for i in range(1, len(self.layer)):
                 self.layer[i].train(self.layer[i - 1])
 
@@ -53,14 +53,14 @@ class NeuralNetwork():
 
 
 if __name__ == '__main__':
-    xor_nn = NeuralNetwork([2, 4, 4, 2])
+    xor_nn = NeuralNetwork([2, 4, 2])
     input = [[0, 0],
              [0, 1],
              [1, 0],
              [1, 1]]
 
     output = [0, 1, 1, 0]
-    for i in range(1000):
+    for i in range(4000):
         xor_nn.train(input[i % 4], output[i % 4])
 
     for i in range(4):

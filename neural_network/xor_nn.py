@@ -26,8 +26,8 @@ class XorNeuralNetwork():
         self.layer_3rd.random_weight(2, self.layer_2nd.num_nut)
         self.layer_last.random_weight(2, self.layer_3rd.num_nut)
 
-    def train(self):
-        for _ in range(1000):
+    def train(self, round):
+        for _ in range(round):
             case_match = 0
             for i in range(len(self.input)):
                 # propagation
@@ -52,7 +52,7 @@ class XorNeuralNetwork():
                 self.layer_3rd.train(self.layer_2nd)
                 self.layer_last.train(self.layer_3rd)
 
-            print case_match*100.0/len(self.input)
+            # print case_match*100.0/len(self.input)
 
     def test(self):
         for i in range(len(self.input)):
@@ -65,5 +65,5 @@ class XorNeuralNetwork():
 
 if __name__ == '__main__':
     xor = XorNeuralNetwork()
-    xor.train()
+    xor.train(4000)
     xor.test()

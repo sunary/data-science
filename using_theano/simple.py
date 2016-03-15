@@ -17,6 +17,24 @@ def warmup():
     print f(np.ones(2))
 
 
+def scan():
+    def fn(a, b):
+        return a * b
+
+    k = T.iscalar('k')
+    A = T.ivector('A')
+
+    result, updates = theano.scan(fn,
+                                 outputs_info=T.ones_like(A),
+                                 sequences=None,
+                                 non_sequences=[A],
+                                 n_steps=k)
+
+    power = theano.function(inputs=[A, k], outputs=result, updates=updates)
+
+    print power(range(10), 2)
+
+
 def liner_regression():
     x = T.vector('x')
     target = T.scalar('target')
@@ -37,4 +55,5 @@ def liner_regression():
 
 if __name__ == '__main__':
     # warmup()
-    liner_regression()
+    scan()
+    # liner_regression()

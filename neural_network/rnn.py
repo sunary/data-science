@@ -1,7 +1,8 @@
 __author__ = 'sunary'
 
 
-import copy, numpy as np
+import copy
+import numpy as np
 
 
 np.random.seed(0)

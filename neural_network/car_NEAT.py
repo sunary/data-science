@@ -1,14 +1,13 @@
 __author__ = 'sunary'
 
+
 import random
-
-from artificial_intelligence.neural_network import NeuralNetwork
-
+from neural_network.neural_network import NeuralNetwork
 from neural_network.race_game import RaceGame
 from ranking.scale import Scale
 
 
-class NEAT(RaceGame):
+class CarGenetic(RaceGame):
 
     def __init__(self):
         self.delta_angle = [-0.03, -0.02, -0.01, 0, 0.01, 0.02, 0.03]
@@ -131,4 +130,4 @@ class NEAT(RaceGame):
 
 
 if __name__ == '__main__':
-    race_game = NEAT()
+    race_game = CarGenetic()
