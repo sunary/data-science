@@ -12,14 +12,17 @@ class CarGenetic(RaceGame):
                             0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.035]
         self.len_delta = len(self.delta_angle)
         self.nn_nodes = [5, 8, 5, self.len_delta]
+
         self.start()
 
         RaceGame.__init__(self)
 
     def start(self):
         self.model = NeuralNetwork(self.nn_nodes)
-        self.last_id = -1
+        self.step = 0
+        self.max_step = 0
         self.training_group = []
+        self.best_traning = []
 
     def update(self):
         RaceGame.update(self)
@@ -27,29 +30,27 @@ class CarGenetic(RaceGame):
         if self.is_broken:
             self.training_car()
             self.car.restart()
-            self.last_id = -1
             self.training_group = []
+            self.step = 0
         else:
             input = self.collision_sight + [self.car.angle]
             id_output = self.model.train(input)
-            if (id_output <= self.len_delta/2 and self.last_id <= self.len_delta/2) or \
-                    (id_output >= self.len_delta/2 and self.last_id >= self.len_delta/2):
-                self.training_group.append((input, id_output))
-            else:
-                self.training_group = [(input, id_output)]
-                self.last_id = id_output
+            self.training_group.append((input, id_output))
+            self.step += 1
 
             self.car.update(delta_angle=self.delta_angle[id_output])
 
     def training_car(self):
-        for train_data in self.training_group:
-            new_id = train_data[1]
-            if self.car_collision_id < 2 and new_id < self.len_delta - 1:
-                new_id += 1
-            elif self.car_collision_id >= 2 and new_id > 0:
-                new_id -= 1
+        num_last_step = 5
+        if self.step > self.max_step:
+            self.max_step = self.step
+            self.best_traning = self.training_group[:-num_last_step]
 
-            self.model.train(train_data[0], new_id)
+            for train_data in self.best_traning:
+                self.model.train(train_data[0], expected_id=train_data[1])
+
+        for train_data in self.training_group[-num_last_step:]:
+            self.model.train(train_data[0], unexpected_id=train_data[1])
 
 
 if __name__ == '__main__':

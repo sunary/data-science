@@ -2,7 +2,9 @@ __author__ = 'sunary'
 
 
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def warmup():
@@ -38,6 +40,29 @@ def subplot():
     plt.show()
 
 
+def with_pandas():
+    df = pd.DataFrame(np.random.randn(10, 4), index=pd.date_range('1/1/2010', periods=10), columns=list('ABCD'))
+    # ts = pd.Series(np.random.randn(1000), index=pd.date_range('1/1/2010', periods=1000))
+    df = df.cumsum()
+    # df.plot()
+    df.plot.bar()
+    # df.plot.barh()
+    # df.plot.hist(alpha=0.7)
+    # df.plot.box()
+    # df.plot.kde()
+    # df.plot.area()
+    # df.plot.scatter(x='A', y='B')
+    # df.plot.hexbin(x='A', y='B', gridsize=30)
+    # df.plot.pie(figsize=(6, 6))
+    plt.show()
+
+
+def heatmap():
+    uniform_data = np.random.rand(10, 12)
+    ax = sns.heatmap(uniform_data)
+
+
 if __name__ == '__main__':
-    warmup()
-    subplot()
+    # warmup()
+    # subplot()
+    with_pandas()

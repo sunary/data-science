@@ -6,20 +6,26 @@ from neural_network.layer_nn import LayerNetwork
 
 class NeuralNetwork():
 
-    def __init__(self, layer_nodes, using_sigmod=True):
-        self.using_sigmod = using_sigmod
-        self.layer = [LayerNetwork(i, self.using_sigmod) for i in layer_nodes]
-        self.random_weight()
+    def __init__(self, layer_nodes=None, using_sigmod=True):
+        if layer_nodes:
+            self.using_sigmod = using_sigmod
+            self.random_weight(2.0, layer_nodes)
 
-    def random_weight(self, range_random=2.0):
+    def create_layers(self, layer_nodes=None):
+        if layer_nodes:
+            self.layer = [LayerNetwork(i, self.using_sigmod) for i in layer_nodes]
+
+    def random_weight(self, range_random=2.0, layer_nodes=None):
+        self.create_layers(layer_nodes)
         for i in range(1, len(self.layer)):
             self.layer[i].random_weight(range_random, self.layer[i - 1].num_nut)
 
-    def set_weight(self, weight):
+    def set_weight(self, weight, layer_nodes=None):
+        self.create_layers(layer_nodes)
         for i in range(1, len(self.layer)):
             self.layer[i].set_weight(weight[i - 1])
 
-    def train(self, input, expected_id=None):
+    def train(self, input, expected_id=None, unexpected_id=None):
         # propagation
         self.layer[0].set_output_layer_first(input)
         for i in range(1, len(self.layer)):
@@ -33,12 +39,19 @@ class NeuralNetwork():
                 max_output = output[i]
                 select_id = i
 
-        if expected_id is not None:
-            if self.using_sigmod:
-                expected_output = [0] * self.layer[len(self.layer) - 1].num_nut
-            else:
-                expected_output = [-1] * self.layer[len(self.layer) - 1].num_nut
-            expected_output[expected_id] = 1
+        if (expected_id is not None) or (unexpected_id is not None):
+            if expected_id is not None:
+                if self.using_sigmod:
+                    expected_output = [0] * self.layer[len(self.layer) - 1].num_nut
+                else:
+                    expected_output = [-1] * self.layer[len(self.layer) - 1].num_nut
+                expected_output[expected_id] = 1
+            elif unexpected_id is not None:
+                expected_output = [1] * self.layer[len(self.layer) - 1].num_nut
+                if self.using_sigmod:
+                    expected_output[unexpected_id] = 0
+                else:
+                    expected_output[unexpected_id] = -1
 
             # back_propagation
             self.layer[len(self.layer) - 1].set_expected_output(expected_output)
@@ -50,6 +63,12 @@ class NeuralNetwork():
                 self.layer[i].train(self.layer[i - 1])
 
         return select_id
+
+    def save(self, filename='model'):
+        fo = open(filename, 'w')
+
+    def load(self, filename='model'):
+        fo = open(filename, 'r')
 
 
 if __name__ == '__main__':

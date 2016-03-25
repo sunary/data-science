@@ -29,4 +29,4 @@ for i in range(100):
     for x, y in zip(trX, trY):
         train(x, y)
 
-print w.get_value() #something around 2
+print w.get_value() # something around 2
