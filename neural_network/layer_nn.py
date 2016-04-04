@@ -28,8 +28,10 @@ class LayerNetwork():
     def set_teaching_speed(self, speed):
         self.teaching_speed = speed
 
-    def set_weight(self, input_weight):
+    def set_weight(self, input_weight, bias=None):
         self.weight = [temp[:] for temp in input_weight]
+        if bias:
+            self.bias = bias[:]
 
     def random_weight(self, range_random, num_nut_previous_layer):
         random_weight = [[] for _ in range(self.num_nut)]

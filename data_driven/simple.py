@@ -4,7 +4,6 @@ __author__ = 'sunary'
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 def warmup():
@@ -58,11 +57,35 @@ def with_pandas():
 
 
 def heatmap():
-    uniform_data = np.random.rand(10, 12)
-    ax = sns.heatmap(uniform_data)
+    x = np.random.randn(2000)
+    y = np.random.randn(2000)
+    heatmap, xedges, yedges = np.histogram2d(x, y, bins=(50, 50))
+    extent = [xedges[0], xedges[-1], yedges[0], yedges[-1]]
+
+    plt.clf()
+    plt.imshow(heatmap, extent=extent)
+    plt.show()
+
+
+def draw_object():
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1, 1)
+
+    rect = plt.Rectangle((5, 4), 1, 4, color='k', alpha=0.3)
+    circ = plt.Circle((4, 4), 1.0, color='b', alpha=0.3)
+    pgon = plt.Polygon([[1, 1], [1.5, 2], [0, 3]], color='g', alpha=0.3)
+
+    ax.plot(range(10), 'o', color='black')
+    ax.add_patch(rect)
+    ax.add_patch(circ)
+    ax.add_patch(pgon)
+
+    plt.show(ax)
 
 
 if __name__ == '__main__':
     # warmup()
     # subplot()
-    with_pandas()
+    # with_pandas()
+    heatmap()
+    # draw_object()
