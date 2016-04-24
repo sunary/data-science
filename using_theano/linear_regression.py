@@ -12,11 +12,8 @@ trY = 2 * trX + np.random.randn(*trX.shape) * 0.33
 X = T.scalar()
 Y = T.scalar()
 
-def model(X, w):
-    return X * w
-
 w = theano.shared(np.asarray(0., dtype=theano.config.floatX))
-y = model(X, w)
+y = X * w
 
 cost = T.mean(T.sqr(y - Y))
 gradient = T.grad(cost=cost, wrt=w)

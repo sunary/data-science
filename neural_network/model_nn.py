@@ -42,6 +42,8 @@ class NeuralNetwork():
                 select_id = i
 
         if (expected_id is not None) or (unexpected_id is not None):
+            expected_output = []
+
             if expected_id is not None:
                 if self.using_sigmod:
                     expected_output = [0] * self.layer[len(self.layer) - 1].num_nut
@@ -60,9 +62,9 @@ class NeuralNetwork():
             for i in range(len(self.layer) - 2, 0, -1):
                 self.layer[i].back_propagation(self.layer[i - 1], self.layer[i + 1])
 
-            # train
+            # gradient
             for i in range(1, len(self.layer)):
-                self.layer[i].train(self.layer[i - 1])
+                self.layer[i].grad(self.layer[i - 1])
 
         return select_id
 

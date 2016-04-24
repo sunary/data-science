@@ -46,7 +46,7 @@ def liner_regression():
 
     cost = T.sqr(target - y)
     gradient = T.grad(cost, [W])
-    update = [(W, W - 0.1 *gradient[0])]
+    update = [(W, W - 0.1 * gradient[0])]
 
     f = theano.function([x, target], y, updates=update)
 
@@ -57,5 +57,5 @@ def liner_regression():
 
 if __name__ == '__main__':
     # warmup()
-    scan()
-    # liner_regression()
+    # scan()
+    liner_regression()

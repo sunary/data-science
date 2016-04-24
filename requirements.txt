@@ -1,2 +1,2 @@
 pandas==0.17.1
-theano==0.7.0
+theano==0.8.1

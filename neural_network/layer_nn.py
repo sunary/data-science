@@ -3,6 +3,7 @@ __author__ = 'sunary'
 
 import math
 import random
+import copy
 
 
 class LayerNetwork():
@@ -29,7 +30,7 @@ class LayerNetwork():
         self.teaching_speed = speed
 
     def set_weight(self, input_weight, bias=None):
-        self.weight = [temp[:] for temp in input_weight]
+        self.weight = copy.deepcopy(input_weight)
         if bias:
             self.bias = bias[:]
 
@@ -60,7 +61,7 @@ class LayerNetwork():
 
             self.delta[i] *= self.f_derivation(temp + self.bias[i])
 
-    def train(self, previous_layer):
+    def grad(self, previous_layer):
         for i in range(self.num_nut):
             for j in range(previous_layer.num_nut):
                 self.weight[i][j] += self.teaching_speed*self.delta[i]*previous_layer.output[j]
