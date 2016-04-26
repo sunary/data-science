@@ -41,7 +41,9 @@ class NeuralNetwork():
                 max_output = output[i]
                 select_id = i
 
-        if (expected_id is not None) or (unexpected_id is not None):
+        if (expected_id is None) and (unexpected_id is None):
+            return select_id
+        else:
             expected_output = []
 
             if expected_id is not None:
@@ -58,15 +60,19 @@ class NeuralNetwork():
                     expected_output[unexpected_id] = -1
 
             # back_propagation
-            self.layer[len(self.layer) - 1].set_expected_output(expected_output)
+            cost = 0
+            delta = self.layer[len(self.layer) - 1].set_expected_output(expected_output)
+            cost += sum([d**2 for d in delta])
+
             for i in range(len(self.layer) - 2, 0, -1):
-                self.layer[i].back_propagation(self.layer[i - 1], self.layer[i + 1])
+                delta = self.layer[i].back_propagation(self.layer[i - 1], self.layer[i + 1])
+                cost += sum([d**2 for d in delta])
 
             # gradient
             for i in range(1, len(self.layer)):
                 self.layer[i].grad(self.layer[i - 1])
 
-        return select_id
+            return cost
 
     def save(self, filename='model.dat'):
         float_array = array('d', [])
@@ -124,7 +130,7 @@ if __name__ == '__main__':
 
     output = [0, 1, 1, 0]
     for i in range(4000):
-        xor_nn.train(input[i % 4], output[i % 4])
+        print xor_nn.train(input[i % 4], output[i % 4])
 
     for i in range(4):
         print xor_nn.train(input[i])

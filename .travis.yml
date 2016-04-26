@@ -6,3 +6,6 @@ python:
 
 script:
   - python setup.py install
+
+notifications:
+  email: false

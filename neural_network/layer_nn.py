@@ -61,6 +61,8 @@ class LayerNetwork():
 
             self.delta[i] *= self.f_derivation(temp + self.bias[i])
 
+        return self.delta
+
     def grad(self, previous_layer):
         for i in range(self.num_nut):
             for j in range(previous_layer.num_nut):
@@ -70,6 +72,8 @@ class LayerNetwork():
     def set_expected_output(self, output_expected):
         for i in range(len(self.delta)):
             self.delta[i] = output_expected[i] - self.output[i]
+
+        return self.delta
 
     def node_expected(self):
         max_value = 0

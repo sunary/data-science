@@ -20,9 +20,9 @@ class RecurrentNeuralNetwork(NeuralNetwork):
         # propagation
         previous_result = 0
         for j in range(len(input)):
-            self.layer[0].set_output_layer_first(input[j] + [previous_result])
+            self.layer[0].set_output_layer_first(list(input[j]) + [previous_result])
 
-            temp_layer = []
+            temp_layer = [] # TODO
             for i in range(1, len(self.layer)):
                 self.layer[i].propagation(self.layer[i - 1])
                 temp_layer.append(copy.deepcopy(self.layer[i].weight))
@@ -39,8 +39,11 @@ class RecurrentNeuralNetwork(NeuralNetwork):
                 max_output = output[i]
                 select_id = i
 
-        if (expected_id is not None) or (unexpected_id is not None):
+        if (expected_id is None) and (unexpected_id is None):
+            return select_id
+        else:
             next_result = 1
+            cost = 0
             for j in range(len(input)):
                 expected_output = []
 
@@ -58,23 +61,27 @@ class RecurrentNeuralNetwork(NeuralNetwork):
                         expected_output[unexpected_id[j]] = -1
 
                 # back_propagation
-                self.layer[len(self.layer) - 1].set_expected_output(expected_output + [next_result])
+                delta = self.layer[len(self.layer) - 1].set_expected_output(expected_output + [next_result])
+                cost += sum([d**2 for d in delta])
+
                 for i in range(len(self.layer) - 2, 0, -1):
-                    self.layer[i].back_propagation(self.layer[i - 1], self.layer[i + 1])
+                    delta = self.layer[i].back_propagation(self.layer[i - 1], self.layer[i + 1])
+                    cost += sum([d**2 for d in delta])
 
                 # gradient
                 for i in range(1, len(self.layer)):
                     self.layer[i].grad(self.layer[i - 1])
 
-                # cal outout after gradient
+                # cal output after gradient
                 for i in range(1, len(self.layer)):
                     self.layer[i].propagation(self.layer[i - 1])
 
                 next_result = self.layer[1].output[-1]
 
-        return select_id
+            return cost
 
 
 if __name__ == '__main__':
     rnn = RecurrentNeuralNetwork([2, 3, 2])
-    rnn.train([[1, 1], [0, 0]], [1, 0])
+    for _ in range(100):
+        print rnn.train([[1, 1], [0, 0]], [1, 0])
