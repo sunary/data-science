@@ -1,7 +1,6 @@
 __author__ = 'sunary'
 
 
-
 class LinearRegression():
 
     def __init__(self):
