@@ -4,7 +4,7 @@ __author__ = 'sunary'
 import random
 from neural_network.model_nn import NeuralNetwork
 from neural_network.race_game import RaceGame
-from ranking.scale import Scale
+from ranking import scale
 
 
 class CarGenetic(RaceGame):
@@ -73,7 +73,7 @@ class CarGenetic(RaceGame):
     def evaluation(self):
         print 'Gen: %s, max: %s steps' % (self.gen, max(self.step_record))
 
-        rank_step_record = Scale.standard_competition_ranking(self.step_record)
+        rank_step_record = scale.standard_competition_ranking(self.step_record)
         max_rank = max(rank_step_record)
         for i in range(len(rank_step_record)):
             if rank_step_record[i] == max_rank:

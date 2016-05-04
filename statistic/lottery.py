@@ -6,23 +6,21 @@ import re
 from datetime import datetime, timedelta
 from collections import Counter
 from redis.client import StrictRedis
+from ranking import scale
 
 
 redis = StrictRedis()
 expire = 41 * 84600
-time_out = 19
 
 
 def crawl_lottery(date, full=False):
-    date = [(str(d) if d > 9 else '0' + str(d)) for d in date]
-
-    key = 'mienbac-{0}/{1}/{2}'.format(date[0], date[1], date[2])
+    key = 'mienbac-{0}'.format(date.strftime('%d/%m/%Y'))
     redis_ketqua = redis.get(key)
 
     if redis_ketqua and not full:
         return redis_ketqua
 
-    res = requests.get('http://www.minhngoc.com.vn/getkqxs/mien-bac/{0}-{1}-{2}.js'.format(date[0], date[1], date[2])).text
+    res = requests.get('http://www.minhngoc.com.vn/getkqxs/mien-bac/{0}.js'.format(date.strftime('%d-%m-%Y'))).text
 
     giai = ['giaidb', 'giai1', 'giai2', 'giai3', 'giai4', 'giai5', 'giai6', 'giai7']
     ketqua = ''
@@ -48,35 +46,30 @@ def crawl_lottery(date, full=False):
     return ketqua
 
 
-def last_n_days(days=40, timezone=7):
+def last_n_days(days=40):
     start_date = datetime.utcnow()
 
-    if start_date.hour + timezone < time_out:
+    if requests.get('http://www.minhngoc.com.vn/getkqxs/mien-bac/{0}.js'.format(start_date.strftime('%d-%m-%Y')),
+                    allow_redirects=False).status_code == 302:
         start_date -= timedelta(days=1)
 
-    crawl_date = []
+    today = start_date
+    crawl_dates = []
     for i in range(days):
-        crawl_date.append([start_date.day, start_date.month, start_date.year])
+        crawl_dates.append(start_date)
         start_date -= timedelta(days=1)
 
-    return crawl_date
-
-
-def str_today(timezone=7):
-    today = datetime.utcnow()
-
-    if today.hour + timezone < time_out:
-        today -= timedelta(days=1)
-
-    return '{0}-{1}-{2}'.format(today.day, today.month, today.year)
+    return crawl_dates, today
 
 
 def soi(days=40):
-    dates = last_n_days(days)
+    crawl_dates, today = last_n_days(days)
+    today = today.strftime('%d-%m-%Y')
+
     ketqua = []
     bin_result_today = ''
     result_today = []
-    for i, d in enumerate(dates):
+    for i, d in enumerate(crawl_dates):
         if i == 0:
             result_today = crawl_lottery(d, True)
             bin_result_today = result_today[0]
@@ -86,7 +79,7 @@ def soi(days=40):
         else:
             ketqua.append(crawl_lottery(d))
 
-    lokhan, most_appears, prefix, suffix = statistic(ketqua)
+    lokhan, most_appears, prefix, suffix = statistic(ketqua, days)
 
     bin_result_today = bin_result_today.split(',')[:-1]
     group_head = [[] for _ in range(10)]
@@ -103,25 +96,34 @@ def soi(days=40):
         group_tail[i] = sorted(group_tail[i])
         group_tail[i] = ', '.join(group_tail[i])
 
-    return result_today, group_head, group_tail, lokhan, most_appears, prefix, suffix
+    return today, result_today, group_head, group_tail, lokhan, most_appears, prefix, suffix
 
 
-def statistic(ketqua_n_days):
-    lokhan = []
+def statistic(ketqua_n_days, days):
+    distance_days = []
     for i in range(100):
         i = str(i) if i > 9 else '0' + str(i)
-        lokhan.append([i, 0])
+        distance_days.append([i, []])
 
-    for lo in lokhan:
+    for lo in distance_days:
+        lo[1] += [0]
+        i = 0
         for kq in ketqua_n_days:
             if lo[0] in kq:
-                break
-            lo[1] += 1
+                lo[1] += [0]
+                i += 1
+            lo[1][i] += 1
+
+    lokhan = [[lo[0], lo[1][0]] for lo in distance_days]
+    coefficient = [get_coefficient(lo[1], days) for lo in distance_days]
+    coefficient = scale.standard_competition_ranking(coefficient)
 
     lokhan = sorted(lokhan, key=lambda item:-item[1])[:10]
 
     most_appears = []
-    ketqua_n_days = ','.join(ketqua_n_days).split(',')
+    ketqua_n_days = ','.join(ketqua_n_days)
+    ketqua_n_days = ketqua_n_days.replace('|', ',')
+    ketqua_n_days = ketqua_n_days.split(',')
     frequency = Counter(ketqua_n_days)
 
     for i in range(100):
@@ -134,6 +136,10 @@ def statistic(ketqua_n_days):
 
     most_appears = sorted(most_appears, key=lambda item:item[0])
 
+    for i in range(len(most_appears)):
+        most_appears[i] = list(most_appears[i])
+        most_appears[i].append(coefficient[i])
+
     prefix = [0] * 10
     suffix = [0] * 10
 
@@ -144,5 +150,14 @@ def statistic(ketqua_n_days):
     return lokhan, most_appears, prefix, suffix
 
 
+def get_coefficient(distances, days):
+    sum_distance = sum(distances)*1.0/len(distances)
+    coefficient = 0
+    for dis in distances:
+        coefficient += (sum_distance - dis) **2
+
+    return coefficient/days
+
+
 if __name__ == '__main__':
-    print soi(3)
+    soi(3)
