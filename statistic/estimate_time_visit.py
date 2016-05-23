@@ -132,7 +132,7 @@ class ActorEstimate():
         while probability_visit < 1:
             num_unit += 1
             probability_visit += self.histogram[order_histogram]*self.average_times_visit_per_day/100
-            order_histogram = (order_histogram + 1)%self.LENGTH_HISTOGRAM
+            order_histogram = (order_histogram + 1) % self.LENGTH_HISTOGRAM
 
         return datetime.today() + timedelta(minutes=num_unit*24*60/self.LENGTH_HISTOGRAM)
 
