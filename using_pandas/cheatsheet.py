@@ -90,10 +90,3 @@ def statistic():
     df.describe()
     df.cov()
     df.corr()
-
-
-
-
-
-
-

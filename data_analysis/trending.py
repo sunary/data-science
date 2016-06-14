@@ -1,7 +1,7 @@
 __author__ = 'sunary'
 
 
-from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.linear_model import LinearRegression
 from sklearn.gaussian_process import GaussianProcess
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,10 +24,6 @@ def linear_regression():
     plt.scatter(x, y, label='observed')
     plt.plot(pred_x, pred_y, label='estimate')
     plt.show()
-
-
-def logistic_regression():
-    lg = LogisticRegression()
 
 
 def gaussian():

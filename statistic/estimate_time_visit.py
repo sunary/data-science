@@ -111,8 +111,10 @@ class ActorEstimate():
         else:
             self.average_times_visit_per_day = total_visit*self.SCALE_TIMES_VISIT/self.range_day
 
-        self.average_times_visit_per_day = self.MAX_TIMES_VISIT_PER_DAY if self.average_times_visit_per_day > self.MAX_TIMES_VISIT_PER_DAY else self.average_times_visit_per_day
-        self.average_times_visit_per_day = self.MIN_TIMES_VISIT_PER_DAY if self.average_times_visit_per_day < self.MIN_TIMES_VISIT_PER_DAY else self.average_times_visit_per_day
+        self.average_times_visit_per_day = self.MAX_TIMES_VISIT_PER_DAY if (self.average_times_visit_per_day > self.MAX_TIMES_VISIT_PER_DAY)\
+            else self.average_times_visit_per_day
+        self.average_times_visit_per_day = self.MIN_TIMES_VISIT_PER_DAY if (self.average_times_visit_per_day < self.MIN_TIMES_VISIT_PER_DAY)\
+            else self.average_times_visit_per_day
 
         for i in range(len(self.histogram)):
             self.histogram[i] -= self.histogram[i]*self.PERCENT_SUBTRACT/100
@@ -169,4 +171,3 @@ if __name__ == '__main__':
     actor.set({})
     actor.has_messages(datetime(2015, 6, 3))
     print actor.get()['next_crawl_time']
-
