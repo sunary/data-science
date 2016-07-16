@@ -45,6 +45,7 @@ class Snake():
 
         return path
 
+
 class SnakeAI():
 
     master = Tkinter.Tk(className='Snake')

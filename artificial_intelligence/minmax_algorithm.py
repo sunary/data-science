@@ -5,7 +5,6 @@ import random
 
 
 class Tictactoe():
-
     '''
     Human: 1
     Machine: 2
@@ -62,12 +61,12 @@ class Tictactoe():
         return text[who_win]
 
     def board_status(self, user_board):
-        #who win
+        # who win
         for i in range(len(self.line)):
             if user_board[self.line[i][0]] != 0 and user_board[self.line[i][0]] == user_board[self.line[i][1]]\
                and user_board[self.line[i][0]] == user_board[self.line[i][2]]:
                 return user_board[self.line[i][0]]
-        #tie
+        # tie
         if all([tile != 0 for tile in user_board]):
             return 0
 

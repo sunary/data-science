@@ -7,7 +7,6 @@ from random import randint
 
 
 class LogisticRegression():
-
     '''
     logistis regression and polynomial
     '''
@@ -151,7 +150,7 @@ class LogisticRegression():
     def _sigmoid(self, x):
         return 1.0 / (math.exp(-x) + 1.0)
 
-#http://aimotion.blogspot.com/2011/11/machine-learning-with-python-logistic.html
+# http://aimotion.blogspot.com/2011/11/machine-learning-with-python-logistic.html
 if __name__ == '__main__':
     current_dir = os.path.dirname(__file__)
 

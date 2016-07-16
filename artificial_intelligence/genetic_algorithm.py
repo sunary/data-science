@@ -5,7 +5,6 @@ import random
 
 
 class GeneticAlgorithm():
-
     '''
     Solve: a + b + c + d = 100
     with a, b, c, d >= 0

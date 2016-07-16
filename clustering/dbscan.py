@@ -27,7 +27,7 @@ class DBscan():
                     if self.group[u] == -1 and self._euler_distance(self.data[i], self.data[u]) <= self.min_pts:
                         self.group[u] = self.group[i]
 
-        #sort elements in groups
+        # sort elements in groups
         num_elements = [0]*next_group
         for i in range(len(self.group)):
             num_elements[self.group[i]] += 1
@@ -62,6 +62,7 @@ class DBscan():
             distance += (data1[i] - data2[i])**2
 
         return distance
+
 
 if __name__ == '__main__':
     dbscan = DBscan()

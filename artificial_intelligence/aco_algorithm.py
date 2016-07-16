@@ -33,7 +33,6 @@ class Ant():
 
 
 class ACOAlgorithm():
-
     '''
     Ant colony optimization algorithms to find shortest path
     '''
@@ -105,7 +104,7 @@ class ACOAlgorithm():
                     self.ant[i].start_travel()
 
     def _finish_travel(self):
-        #find short path
+        # find short path
         avg_cost = 0
         ant_completed = 0
         for i in range(len(self.ant)):
@@ -114,7 +113,7 @@ class ACOAlgorithm():
                 ant_completed += 1
         avg_cost /= ant_completed
 
-        #update pheromones
+        # update pheromones
         for i in range(len(self.pheromones)):
             for j in range(len(self.pheromones[0])):
                 if self.pheromones[i][j] > 0:
@@ -126,7 +125,7 @@ class ACOAlgorithm():
                 for x,y in update_pheromones:
                     self.pheromones[x][y]  += avg_cost/self.ant[i].get_cost()
 
-        #remove path has small pheromones
+        # remove path has small pheromones
         if self.remain_path > 2*(self.size - 1):
             for i in range(len(self.pheromones)):
                 for j in range(len(self.pheromones[0])):
@@ -144,7 +143,7 @@ class ACOAlgorithm():
                     if self.pheromones[i][j] <= min_pheromones:
                         self.pheromones[i][j] = -1.0
 
-        #check exist only one path
+        # check exist only one path
         self.remain_path = 0
         for i in range(len(self.pheromones)):
             for j in range(len(self.pheromones[0])):
