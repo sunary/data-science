@@ -4,6 +4,8 @@ __author__ = 'sunary'
 import pandas as pd
 
 
+df = pd.DataFrame()
+
 def reading_and_writing():
     df = pd.read_csv('src.csv')
     df.to_csv('dist.csv')
@@ -13,8 +15,6 @@ def reading_and_writing():
 
 
 def preview():
-    global df
-
     df.head(10)
     df.tail(10)
     df.dtypes
@@ -22,23 +22,19 @@ def preview():
 
 
 def rename():
-    global df, df2
+    global df2
 
     df.rename(columns={'old_column': 'new_column'})
     df2 = df.rename(columns={'old_column': 'new_column'}, inplace=True)
 
 
 def select():
-    global df
-
     df[['column1', 'column2']]
     df[df['column1'] > 5 & df['column2'] < 10]
     df[df['column1'] < 5 | df['column2'] == 30]
 
 
 def handing_na():
-    global df
-
     df.dropna()
     df.findna(value=1)
 
@@ -47,8 +43,6 @@ def handing_na():
 
 
 def new_column():
-    global df
-
     df['new_column'] = df['column']
 
     df['new_column2'] = df['column'] + 10
@@ -57,8 +51,6 @@ def new_column():
 
 
 def aggregate():
-    global df
-
     df.groupby('column').sum()
 
     df.groupby(['column1', 'column2']).count()
@@ -73,20 +65,14 @@ def merge():
 
 
 def lambda_func():
-    global df
-
     df['column1'].map(lambda x: 10 + x)
 
 
 def unique():
-    global df
-
     df['column'].unique()
 
 
 def statistic():
-    global df
-
     df.describe()
     df.cov()
     df.corr()

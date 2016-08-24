@@ -11,14 +11,14 @@ def damage(true_damage, critical_hit):
         return true_damage
 
 
-def sub_amor(total_damage, amor):
-    if amor >= 0:
-        return total_damage * 100.0/(100 + amor)
+def sub_armor(total_damage, armor):
+    if armor >= 0:
+        return total_damage * 100.0/(100 + armor)
     else:
-        return total_damage * (2 - 100.0/(100 - amor))
+        return total_damage * (2 - 100.0/(100 - armor))
 
 
 if __name__ == '__main__':
     print damage(100, 30)
-    print sub_amor(100, 25)
-    print sub_amor(100, -20)
+    print sub_armor(100, 25)
+    print sub_armor(100, -20)
