@@ -85,8 +85,10 @@ class Car():
         self.cal_vertext()
 
     def draw(self, canvas):
-        canvas.create_polygon(self.vertexs[0][0], self.vertexs[0][1], self.vertexs[1][0], self.vertexs[1][1],
-                              self.vertexs[2][0], self.vertexs[2][1], self.vertexs[3][0], self.vertexs[3][1], fill='blue')
+        canvas.create_polygon(self.vertexs[0][0], self.vertexs[0][1],
+                              self.vertexs[1][0], self.vertexs[1][1],
+                              self.vertexs[2][0], self.vertexs[2][1],
+                              self.vertexs[3][0], self.vertexs[3][1], fill='blue')
 
         canvas.create_oval(self.mid[0] - self.r_sight, self.mid[1] - self.r_sight, self.mid[0] + self.r_sight, self.mid[1] + self.r_sight, outline='red')
         for i in range(len(self.sights)):

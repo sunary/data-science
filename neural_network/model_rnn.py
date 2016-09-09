@@ -93,7 +93,7 @@ class RecurrentNeuralNetwork(NeuralNetwork):
 
 if __name__ == '__main__':
     rnn = RecurrentNeuralNetwork([3, 3, 2])
-    for _ in range(10):
+    for _ in range(1):
         print rnn.train([[1, 1, 1], [0, 0, 0]], [1, 0])
         print rnn.train([[1, 1, 0], [0, 0, 1]], [1, 0])
         print rnn.train([[1, 0, 1], [0, 1, 0]], [1, 0])
