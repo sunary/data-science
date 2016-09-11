@@ -9,7 +9,7 @@ class RecurrentNeuralNetwork(NeuralNetwork):
 
     def __init__(self, layer_nodes=None, using_sigmod=True):
         self.using_sigmod = using_sigmod
-        self.recurrent_size = 2
+        self.recurrent_size = 1
 
         if layer_nodes:
             layer_nodes[0] += self.recurrent_size
@@ -24,8 +24,9 @@ class RecurrentNeuralNetwork(NeuralNetwork):
         previous_result = [0] * self.recurrent_size
         select_id = []
 
-        for j in range(len(input)):
-            self.layer[0].set_output_layer_first(list(input[j]) + previous_result)
+        for j in range(len(input[0])):
+            input_layer = [inp[j] for inp in input]
+            self.layer[0].set_output_layer_first(input_layer + previous_result)
 
             temp_weight = []
             temp_bias = []
@@ -52,26 +53,28 @@ class RecurrentNeuralNetwork(NeuralNetwork):
         else:
             next_result = [1] * self.recurrent_size
             cost = 0
-            for j in range(len(input)):
-                expected_output = []
 
-                if expected_id is not None:
+            expected_output = []
+            if expected_id is not None:
+                for i in range(len(expected_id)):
                     if self.using_sigmod:
-                        expected_output = [0] * self.layer[-1].num_nut
+                        expected_output.append([0] * self.layer[-1].num_nut)
                     else:
-                        expected_output = [-1] * self.layer[-1].num_nut
-                    expected_output[expected_id[j]] = 1
-                elif unexpected_id is not None:
-                    expected_output = [1] * self.layer[-1].num_nut
+                        expected_output.append([-1] * self.layer[-1].num_nut)
+                    expected_output[-1][expected_id[i]] = 1
+            elif unexpected_id is not None:
+                for i in range(len(unexpected_id)):
+                    expected_output.append([1] * self.layer[-1].num_nut)
                     if self.using_sigmod:
-                        expected_output[unexpected_id[j]] = 0
+                        expected_output[-1][unexpected_id[i]] = 0
                     else:
-                        expected_output[unexpected_id[j]] = -1
+                        expected_output[-1][unexpected_id[i]] = -1
 
+            for j in range(len(expected_output) - 1, -1, -1):
                 self.set_weight(saved_weight[j], saved_bias[j])
 
                 # back_propagation
-                delta = self.layer[-1].set_expected_output(expected_output + next_result)
+                delta = self.layer[-1].set_expected_output(expected_output[len(expected_output) - j - 1] + next_result)
                 cost += sum([d**2 for d in delta])
 
                 for i in range(len(self.layer) - 2, 0, -1):
@@ -92,11 +95,39 @@ class RecurrentNeuralNetwork(NeuralNetwork):
 
 
 if __name__ == '__main__':
-    rnn = RecurrentNeuralNetwork([3, 3, 2])
-    for _ in range(1):
-        print rnn.train([[1, 1, 1], [0, 0, 0]], [1, 0])
-        print rnn.train([[1, 1, 0], [0, 0, 1]], [1, 0])
-        print rnn.train([[1, 0, 1], [0, 1, 0]], [1, 0])
-        print rnn.train([[0, 1, 1], [1, 0, 0]], [1, 0])
+    import numpy as np
+    import random
 
-    print rnn.train([[1, 1, 1], [0, 0, 0]])
+    largest_number = 2 **8
+    binary = np.unpackbits(np.array([range(largest_number)], dtype=np.uint8).T, axis=1)
+
+    rnn = RecurrentNeuralNetwork([2, 3, 2])
+    for _ in range(10000):
+        a = random.randrange(largest_number/2)
+        b = random.randrange(largest_number/2)
+        c = a + b
+
+        a = binary[a]
+        b = binary[b]
+        c = binary[c]
+
+        a = [a[len(a) - i - 1] for i in range(len(a))]
+        b = [b[len(b) - i - 1] for i in range(len(b))]
+        c = [c[len(c) - i - 1] for i in range(len(c))]
+
+    for _ in range(10):
+        a = random.randrange(largest_number/2)
+        b = random.randrange(largest_number/2)
+        c = a + b
+
+        a = binary[a]
+        b = binary[b]
+        c = binary[c]
+
+        a = [a[len(a) - i - 1] for i in range(len(a))]
+        b = [b[len(b) - i - 1] for i in range(len(b))]
+        c = [c[len(c) - i - 1] for i in range(len(c))]
+
+        print rnn.train([a, b])
+        print c
+        print '--'
