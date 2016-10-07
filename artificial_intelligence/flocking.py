@@ -12,7 +12,7 @@ COHENSION_SIZE = 30
 SEPARATION_SIZE = 15
 
 
-class Boid():
+class Boid(object):
 
     def __init__(self):
         self.loc = None
@@ -33,7 +33,7 @@ class Boid():
     def update(self, boids):
         neighbour_bolds = self.check_around(boids)
 
-        new_move_size = MOVE_SIZE + 1.0/(len(neighbour_bolds) + 1)
+        new_move_size = MOVE_SIZE + 1.0/(len(neighbour_bolds) + 2)
         self.loc = [self.loc[0] + new_move_size * math.cos(self.angle),
                     self.loc[1] - new_move_size * math.sin(self.angle)]
 
@@ -71,8 +71,8 @@ class Boid():
         return math.atan2(middle[1] - self.loc[1], middle[0] - self.loc[0])
 
     def separation(self, neighbour_boids, move_size=MOVE_SIZE, temp_angle=None):
-        move_size_cos = math.cos(temp_angle)* move_size
-        move_size_sin = math.cos(temp_angle)* move_size
+        move_size_cos = math.cos(temp_angle) * move_size
+        move_size_sin = math.sin(temp_angle) * move_size
 
         for i in range(7, 0, -1):
             has_collision = False
@@ -81,6 +81,7 @@ class Boid():
                 if new_distance < SEPARATION_SIZE **2:
                     has_collision = True
                     break
+
             if not has_collision:
                 self.loc = [self.loc[0] + move_size_cos * i/8, self.loc[1] - move_size_sin * i/8]
                 return
@@ -89,9 +90,9 @@ class Boid():
         self.angle = sum([b.angle for b in neighbour_boids] + [self.angle])/(len(neighbour_boids) + 1)
 
 
-class Flocking():
+class Flocking(object):
 
-    master = Tkinter.Tk(className='Race game')
+    master = Tkinter.Tk(className='Flocking')
 
     def __init__(self):
         self.boids = [Boid() for _ in range(13*9)]
