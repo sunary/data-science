@@ -10,32 +10,28 @@ def simple_rnn():
     largest_number = 2 **8
     binary = np.unpackbits(np.array([range(largest_number)], dtype=np.uint8).T, axis=1)
 
-    rnn = RecurrentNeuralNetwork([2, 3, 2])
+    rnn = RecurrentNeuralNetwork([2, 16, 2])
+    rnn.set_sequence(8)
+
     for _ in range(10000):
         a = random.randrange(largest_number/2)
         b = random.randrange(largest_number/2)
         c = a + b
 
-        a = binary[a]
-        b = binary[b]
-        c = binary[c]
+        a = binary[a][::-1]
+        b = binary[b][::-1]
+        c = binary[c][::-1]
 
-        a = [a[len(a) - i - 1] for i in range(len(a))]
-        b = [b[len(b) - i - 1] for i in range(len(b))]
-        c = [c[len(c) - i - 1] for i in range(len(c))]
+        rnn.train([a, b], expected_id=c)
 
     for _ in range(10):
         a = random.randrange(largest_number/2)
         b = random.randrange(largest_number/2)
         c = a + b
 
-        a = binary[a]
-        b = binary[b]
-        c = binary[c]
-
-        a = [a[len(a) - i - 1] for i in range(len(a))]
-        b = [b[len(b) - i - 1] for i in range(len(b))]
-        c = [c[len(c) - i - 1] for i in range(len(c))]
+        a = binary[a][::-1]
+        b = binary[b][::-1]
+        c = binary[c][::-1]
 
         print rnn.train([a, b])
         print c

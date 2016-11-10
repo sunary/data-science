@@ -64,7 +64,7 @@ class NeuralNetwork():
             delta = self.layer[len(self.layer) - 1].set_expected_output(expected_output)
             cost += sum([d**2 for d in delta])
 
-            for i in range(len(self.layer) - 2, 0, -1):
+            for i in range(1, len(self.layer) - 1)[::-1]:
                 delta = self.layer[i].back_propagation(self.layer[i - 1], self.layer[i + 1])
                 cost += sum([d**2 for d in delta])
 

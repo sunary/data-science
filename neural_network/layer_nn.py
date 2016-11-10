@@ -90,14 +90,13 @@ class LayerNetwork():
             try:
                 return 1.0 / (math.exp(-x * self.shim) + 1.0)
             except:
-                return 0.0
+                return 0 if x > 0 else 1
         else:
             # range [-1, 1]
             try:
                 return 1.0 - 2 / (math.exp(2*x * self.shim) + 1)
             except:
-                return -1.0
-
+                return -1 if x < 0 else 1
 
     def f_derivation(self, x):
         if self.using_sigmod:
