@@ -87,10 +87,17 @@ class LayerNetwork():
     def f_active(self, x):
         if self.using_sigmod:
             # range [0, 1]
-            return 1.0 / (math.exp(-x * self.shim) + 1.0)
+            try:
+                return 1.0 / (math.exp(-x * self.shim) + 1.0)
+            except:
+                return 0.0
         else:
             # range [-1, 1]
-            return 1.0 - 2 / (math.exp(2*x * self.shim) + 1)
+            try:
+                return 1.0 - 2 / (math.exp(2*x * self.shim) + 1)
+            except:
+                return -1.0
+
 
     def f_derivation(self, x):
         if self.using_sigmod:
