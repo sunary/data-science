@@ -7,11 +7,12 @@ from neural_network.model_rnn import RecurrentNeuralNetwork
 
 
 def simple_rnn():
-    largest_number = 2 **8
+    binary_dim = 8
+
+    largest_number = 2 **binary_dim
     binary = np.unpackbits(np.array([range(largest_number)], dtype=np.uint8).T, axis=1)
 
-    rnn = RecurrentNeuralNetwork([2, 16, 2])
-    rnn.set_sequence(8)
+    rnn = RecurrentNeuralNetwork([2, 16, 2], binary_dim)
 
     for _ in range(10000):
         a = random.randrange(largest_number/2)
