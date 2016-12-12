@@ -21,7 +21,6 @@ updates = [[w, w - gradient * 0.01]]
 
 train = theano.function(inputs=[X, Y], outputs=cost, updates=updates, allow_input_downcast=True)
 
-
 for i in range(100):
     for x, y in zip(trX, trY):
         train(x, y)

@@ -29,7 +29,7 @@ class LogisticRegression():
         for i in range(len(self.traning_x[0]) + 1):
             self.theta.append(randint(-5, 5))
 
-    def set_data_traning_polynomial(self, data):
+    def set_data_training_polynomial(self, data):
         for i in range(len(data)):
             self.traning_x.append([])
             self.traning_y.append(data[i][-1])
@@ -170,7 +170,7 @@ if __name__ == '__main__':
     # logistic_regression.traning()
     # logistic_regression.test()
 
-    logistic_regression.set_data_traning_polynomial(data_skin)
+    logistic_regression.set_data_training_polynomial(data_skin)
     logistic_regression.set_theta([-2.420307580849564, 0.2886026874105773, 3.0393755185559446, 2.0393571553313623, 0.039320428882199276, 3.0393755185559446, 5.039412245005106, -1.9607162975669643, -3.960753024016128, 0.039320428882199276, 1.039338792106781, 5.039412245005106, 4.0393938817805255, -4.960771387240709])
     logistic_regression.traning_polynomial()
     logistic_regression.test_polynomial()

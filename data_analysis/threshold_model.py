@@ -45,6 +45,7 @@ def predict(model, features):
     else:
         return features[:, fi] > t
 
+
 def accuracy(features, labels, model):
     '''Compute the accuracy of the model'''
     preds = predict(model, features)
