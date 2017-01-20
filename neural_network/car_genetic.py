@@ -11,7 +11,7 @@ class CarGenetic(RaceGame):
 
     def __init__(self):
         self.delta_angle = [-0.03, -0.02, -0.01, 0, 0.01, 0.02, 0.03]
-        self.nn_nodes = [5, 8, 5, 7]
+        self.nn_nodes = [5, 7]
         self.start()
 
         RaceGame.__init__(self)
@@ -121,7 +121,7 @@ class CarGenetic(RaceGame):
         for _ in range(len(self.chromosome_weight)/5):
             chromosome_mutation = self.chromosome_weight[random.randint(0, len(self.chromosome_weight) - 1)]
             position_mutation = random.randint(0, self.size - 1)
-            value_mutation = random.random()/5 + chromosome_mutation[position_mutation]
+            value_mutation = (random.random() - 0.5)/2 + chromosome_mutation[position_mutation]
             chromosome_mutation[position_mutation] = value_mutation
 
             object_mutation.append(chromosome_mutation)
