@@ -5,7 +5,7 @@ from neural_network.layer_nn import LayerNetwork
 from array import array
 
 
-class NeuralNetwork():
+class NeuralNetwork(object):
 
     def __init__(self, layer_nodes=None, using_sigmod=True):
         self.using_sigmod = using_sigmod

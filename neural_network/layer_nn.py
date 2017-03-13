@@ -6,12 +6,12 @@ import random
 import copy
 
 
-class LayerNetwork():
+class LayerNetwork(object):
     '''
     layer of neural network
     '''
     shim = 1.0
-    teaching_speed = 0.1
+    teaching_speed = 1
 
     def __init__(self, num_nut_layer, using_sigmod=True):
         self.using_sigmod = using_sigmod
