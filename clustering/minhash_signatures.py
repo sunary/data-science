@@ -1,21 +1,21 @@
 __author__ = 'sunary'
 
 
-class MinhashSignatures():
+class MinhashSignatures(object):
 
     def __init__(self, input_dim, hfunc_para):
         self.input_dim = input_dim
         self.hfunc_para = hfunc_para
 
     def _hash_function(self, para1, para2, x):
-        return (para1*x + para2) % self.input_dim
+        return (para1 * x + para2) % self.input_dim
 
     def hash(self, input_point):
         hashed = [self.input_dim] * len(self.hfunc_para)
         for i in range(len(self.hfunc_para)):
             for j, point in enumerate(input_point):
                 if point:
-                    hashed[i] = min (hashed[i], self._hash_function(self.hfunc_para[i][0], self.hfunc_para[i][1], j))
+                    hashed[i] = min(hashed[i], self._hash_function(self.hfunc_para[i][0], self.hfunc_para[i][1], j))
 
         return hashed
 

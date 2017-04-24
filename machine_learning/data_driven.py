@@ -6,7 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def warmup():
+def sample():
     x = np.arange(0, 3 * np.pi, 0.1)
     y_sin = np.sin(x)
     y_cos = np.cos(x)
@@ -84,7 +84,7 @@ def draw_object():
 
 
 if __name__ == '__main__':
-    # warmup()
+    # sample()
     # subplot()
     # with_pandas()
     heatmap()

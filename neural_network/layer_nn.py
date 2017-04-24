@@ -39,7 +39,7 @@ class LayerNetwork(object):
         for i in range(self.num_nut):
             random_weight[i] = [0]* num_nut_previous_layer
             for j in range(num_nut_previous_layer):
-                random_weight[i][j] = 2*range_random*random.random() - range_random
+                random_weight[i][j] = 2 * range_random*random.random() - range_random
 
         self.set_weight(random_weight)
 
@@ -47,7 +47,7 @@ class LayerNetwork(object):
         for i in range(self.num_nut):
             temp = 0
             for j in range(previous_layer.num_nut):
-                temp += self.weight[i][j]*previous_layer.output[j]
+                temp += self.weight[i][j] * previous_layer.output[j]
             self.output[i] = self.f_active(temp + self.bias[i])
 
     def back_propagation(self, previous_layer, next_layer):
@@ -55,9 +55,9 @@ class LayerNetwork(object):
         for i in range(self.num_nut):
             temp = 0
             for j in range(previous_layer.num_nut):
-                temp += self.weight[i][j]*previous_layer.output[j]
+                temp += self.weight[i][j] * previous_layer.output[j]
             for j in range(next_layer.num_nut):
-                self.delta[i] += next_layer.weight[j][i]*next_layer.delta[j]
+                self.delta[i] += next_layer.weight[j][i] * next_layer.delta[j]
 
             self.delta[i] *= self.f_derivation(temp + self.bias[i])
 
