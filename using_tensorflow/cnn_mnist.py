@@ -53,7 +53,7 @@ def cnn_model_fn(features, labels, mode):
         train_op = tf.contrib.layers.optimize_loss(
             loss=loss,
             global_step=tf.contrib.framework.get_global_step(),
-            learning_rate=0.001,
+            learning_rate=0.005,
             optimizer='SGD'
         )
 
@@ -64,10 +64,12 @@ def cnn_model_fn(features, labels, mode):
     return model_fn_lib.ModelFnOps(mode=mode, predictions=predictions, loss=loss, train_op=train_op)
 
 
-def main():
+def train():
     mnist = learn.datasets.load_dataset('mnist')
+
     train_data = mnist.train.images
     train_labels = np.asarray(mnist.train.labels, dtype=np.int32)
+
     eval_data = mnist.test.images
     eval_labels = np.asarray(mnist.test.labels, dtype=np.int32)
 
@@ -76,7 +78,7 @@ def main():
         x=train_data,
         y=train_labels,
         batch_size=50,
-        steps=5000
+        steps=10000
     )
 
     metrics = {"accuracy": learn.MetricSpec(metric_fn=tf.metrics.accuracy,
@@ -88,8 +90,9 @@ def main():
     )
     print(eval_results)
 
+
 if __name__ == '__main__':
-    main()
+    train()
 
 
 
