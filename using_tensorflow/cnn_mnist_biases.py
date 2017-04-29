@@ -6,6 +6,10 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
 
+key_w = ['wc1', 'wc2', 'wd1', 'out']
+key_b = ['bc1', 'bc2', 'bd1', 'out']
+
+
 def conv2d(x, W, b, strides=1):
     x = tf.nn.conv2d(x, W, strides=[1, strides, strides, 1], padding='SAME')
     x = tf.nn.bias_add(x, b)
@@ -58,20 +62,24 @@ def train():
 
     weights = {
         # 5x5 conv, 1 input, 32 outputs
-        'wc1': tf.Variable(tf.random_normal([5, 5, 1, 32])),
+        key_w[0]: tf.Variable(tf.random_normal([5, 5, 1, 32])),
         # 5x5 conv, 32 inputs, 64 outputs
-        'wc2': tf.Variable(tf.random_normal([5, 5, 32, 64])),
+        key_w[1]: tf.Variable(tf.random_normal([5, 5, 32, 64])),
         # fully connected, 7*7*64 inputs, 1024 outputs
-        'wd1': tf.Variable(tf.random_normal([7 * 7 * 64, 1024])),
+        key_w[2]: tf.Variable(tf.random_normal([7 * 7 * 64, 1024])),
         # 1024 inputs, 10 outputs (class prediction)
-        'out': tf.Variable(tf.random_normal([1024, 10]))
+        key_w[3]: tf.Variable(tf.random_normal([1024, 10]))
     }
     biases = {
-        'bc1': tf.Variable(tf.random_normal([32])),
-        'bc2': tf.Variable(tf.random_normal([64])),
-        'bd1': tf.Variable(tf.random_normal([1024])),
-        'out': tf.Variable(tf.random_normal([10]))
+        key_b[0]: tf.Variable(tf.random_normal([32])),
+        key_b[1]: tf.Variable(tf.random_normal([64])),
+        key_b[2]: tf.Variable(tf.random_normal([1024])),
+        key_b[3]: tf.Variable(tf.random_normal([10]))
     }
+
+    saver = tf.train.Saver()
+    [tf.add_to_collection('vars', weights[k]) for k in key_w]
+    [tf.add_to_collection('vars', biases[k]) for k in key_b]
 
     pred = conv_net(x, weights, biases, keep_prob)
 
@@ -83,9 +91,6 @@ def train():
     correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_pred, tf.float32))
 
-    saver = tf.train.Saver()
-    tf.add_to_collection('vars', weights)
-    tf.add_to_collection('vars', biases)
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
 
@@ -110,9 +115,15 @@ def load_model():
         new_saver = tf.train.import_meta_graph('data/cnn_mnist2/model.meta')
         new_saver.restore(sess, tf.train.latest_checkpoint('./'))
         all_vars = tf.get_collection('vars')
-        weights, bias = all_vars[0], all_vars[1]
 
+        weights = {}
+        for i, k in enumerate(key_w):
+            weights[k] = all_vars[i]
+
+        biases = {}
+        for i, k in enumerate(key_b):
+            biases[k] = all_vars[i + len(key_w)]
 
 if __name__ == '__main__':
-    # train()
-    load_model()
+    train()
+    # load_model()
