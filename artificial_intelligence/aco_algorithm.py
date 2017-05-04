@@ -135,7 +135,7 @@ class ACOAlgorithm():
             min_pheromones = 999999.99
             for i in range(len(self.pheromones)):
                 for j in range(len(self.pheromones[0])):
-                    if self.pheromones[i][j] > 0 and self.pheromones[i][j] < min_pheromones:
+                    if min_pheromones > self.pheromones[i][j] > 0:
                         min_pheromones = self.pheromones[i][j]
 
             for i in range(len(self.pheromones)):
