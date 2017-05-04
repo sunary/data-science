@@ -136,7 +136,7 @@ def train():
         x=train_data,
         y=train_labels,
         batch_size=50,
-        steps=2000,
+        steps=1000,
         monitors=[logging_hook]
     )
 

@@ -62,19 +62,19 @@ def train():
 
     weights = {
         # 5x5 conv, 1 input, 32 outputs
-        key_w[0]: tf.Variable(tf.random_normal([5, 5, 1, 32])),
+        key_w[0]: tf.Variable(tf.random_normal([5, 5, 1, 32], stddev=0.01)),
         # 5x5 conv, 32 inputs, 64 outputs
-        key_w[1]: tf.Variable(tf.random_normal([5, 5, 32, 64])),
+        key_w[1]: tf.Variable(tf.random_normal([5, 5, 32, 64], stddev=0.01)),
         # fully connected, 7*7*64 inputs, 1024 outputs
-        key_w[2]: tf.Variable(tf.random_normal([7 * 7 * 64, 1024])),
+        key_w[2]: tf.Variable(tf.random_normal([7 * 7 * 64, 1024], stddev=0.01)),
         # 1024 inputs, 10 outputs (class prediction)
-        key_w[3]: tf.Variable(tf.random_normal([1024, 10]))
+        key_w[3]: tf.Variable(tf.random_normal([1024, 10], stddev=0.01))
     }
     biases = {
-        key_b[0]: tf.Variable(tf.random_normal([32])),
-        key_b[1]: tf.Variable(tf.random_normal([64])),
-        key_b[2]: tf.Variable(tf.random_normal([1024])),
-        key_b[3]: tf.Variable(tf.random_normal([10]))
+        key_b[0]: tf.Variable(tf.random_normal([32], stddev=0.01)),
+        key_b[1]: tf.Variable(tf.random_normal([64], stddev=0.01)),
+        key_b[2]: tf.Variable(tf.random_normal([1024], stddev=0.01)),
+        key_b[3]: tf.Variable(tf.random_normal([10], stddev=0.01))
     }
 
     saver = tf.train.Saver()
@@ -85,7 +85,8 @@ def train():
 
     # Define loss and optimizer
     cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
-    optimizer = tf.train.AdamOptimizer(learning_rate=0.01).minimize(cost)
+    # optimizer = tf.train.AdamOptimizer(learning_rate=0.01).minimize(cost)
+    optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01).minimize(cost)
 
     # Evaluate model
     correct_pred = tf.equal(tf.argmax(pred, 1), tf.argmax(y, 1))
@@ -107,13 +108,13 @@ def train():
                 print('Epoch {}: loss: {}, acc: {}'.format(i + 1, loss, acc))
 
         print sess.run([cost, accuracy], feed_dict={x: eval_data, y: eval_labels, keep_prob: 1.})
-        saver.save(sess, 'data/cnn_mnist2/model')
+        saver.save(sess, 'data/cnn_mnist/model')
 
 
 def load_model():
     with tf.Session() as sess:
-        new_saver = tf.train.import_meta_graph('data/cnn_mnist2/model.meta')
-        new_saver.restore(sess, tf.train.latest_checkpoint('./'))
+        new_saver = tf.train.import_meta_graph('data/cnn_mnist/model.meta')
+        new_saver.restore(sess, tf.train.latest_checkpoint('data/cnn_mnist/'))
         all_vars = tf.get_collection('vars')
 
         weights = {}
@@ -123,6 +124,7 @@ def load_model():
         biases = {}
         for i, k in enumerate(key_b):
             biases[k] = all_vars[i + len(key_w)]
+
 
 if __name__ == '__main__':
     train()
