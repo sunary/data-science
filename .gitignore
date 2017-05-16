@@ -1,2 +1,21 @@
-.idea
-*.pyc
+# Mac
+.DS_Store
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/*
+dist/*
+
+# Virtual env
+_env/
+
+# data
+data/
+MNIST-data/
