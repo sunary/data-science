@@ -3,7 +3,7 @@ __author__ = 'sunary'
 
 class Node(object):
 
-    def __init__(self, char, value = 0):
+    def __init__(self, char, value=0):
         self.char = char
         self.value = value
         self.child = []
@@ -151,10 +151,10 @@ if __name__ == '__main__':
     search_trie = SearchTrie()
     search_trie.sort_add_to_trie(['32', '12', '213434', '22', '231', '324', '34', '4', '44', '512', '122'])
     # search_trie.read_file_trie('text_processing/trie.txt')
-    print search_trie.root_node.show_child()
-    print search_trie.find('12')
-    print search_trie.find('3124')
-    print search_trie.find('22')
-    print search_trie.find('232')
-    print search_trie.find('4')
+    print(search_trie.root_node.show_child())
+    print(search_trie.find('12'))
+    print(search_trie.find('3124'))
+    print(search_trie.find('22'))
+    print(search_trie.find('232'))
+    print(search_trie.find('4'))
     # search_trie.write_file_trie('text_processing/trie.txt')

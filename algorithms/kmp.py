@@ -71,4 +71,4 @@ if __name__ == '__main__':
         word_sought in s2
         word_sought in s3
 
-    print (datetime.datetime.now() - start)
+    print(datetime.datetime.now() - start)

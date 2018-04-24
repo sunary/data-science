@@ -21,4 +21,4 @@ def subsequence_dp(array):
 
 
 if __name__ == '__main__':
-    print subsequence([2, 6, 3, 4, 1, 2, 9, 5, 8])
+    print(subsequence([2, 6, 3, 4, 1, 2, 9, 5, 8]))

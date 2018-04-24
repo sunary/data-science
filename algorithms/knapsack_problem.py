@@ -62,5 +62,5 @@ def add_to_set(set_num, num, checker):
 
 
 if __name__ == '__main__':
-    print dynamic_programming()
-    print meet_in_the_middle()
+    print(dynamic_programming())
+    print(meet_in_the_middle())

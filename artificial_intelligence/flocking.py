@@ -14,6 +14,17 @@ SEPARATION_SIZE = 15
 
 class Boid(object):
 
+    def __init__(self, loc=[0, 0], vec=[0, 0], radius=0):
+        self.loc = loc
+        self.vec = vec
+        self.radius = radius
+
+    def distance(self, other_boid):
+        return math.sqrt((self.loc[0] - other_boid.loc[0])**2 + (self.loc[0] - other_boid.loc[0])**2)
+
+
+class _Boid(object):
+
     def __init__(self):
         self.loc = None
         self.angle = None
@@ -55,6 +66,7 @@ class Boid(object):
         self.triangle[0] = [self.loc[0] + 10 * math.cos(self.angle), self.loc[1] - 10 * math.sin(self.angle)]
         self.triangle[1] = [self.loc[0] + 8 * math.cos(self.angle + math.pi * 5/6), self.loc[1] - 8 * math.sin(self.angle + math.pi * 5/6)]
         self.triangle[2] = [self.loc[0] + 8 * math.cos(self.angle + math.pi * 7/6), self.loc[1] - 8 * math.sin(self.angle + math.pi * 7/6)]
+
 
     def check_around(self, boids, r=COHENSION_SIZE):
         neighbour_bolds = []

@@ -208,4 +208,4 @@ if __name__ == '__main__':
     # print insert_head(a, 4)
     # print insert_nth(a, 4, 1)
     # print delete_node(a, 2)
-    print merge_and_reverse(a, b)
+    print(merge_and_reverse(a, b))

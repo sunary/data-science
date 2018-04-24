@@ -22,4 +22,4 @@ def subsequence(array):
 
 
 if __name__ == '__main__':
-    print subsequence('BBABCBCAB')
+    print(subsequence('BBABCBCAB'))
